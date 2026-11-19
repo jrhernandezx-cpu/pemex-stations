@@ -1,27 +1,28 @@
 ID,Name,State,City,Address,Latitude,Longitude,Status,Operator or owner contact,Pemex go-live date,Fuel volume or sales,Last updated,Notes
-TX-01,Park Place,TX,Houston,"7922 Park Place Blvd, Houston, TX 77087",29.685406,-95.281347,,,,,2026-11-19,Pemex-branded station listed on GasBuddy/Google; geocoded via US Census.
-TX-02,Shaver,TX,,,,,,,,,2026-11-19,"UNCERTAIN: no Pemex-branded station found on Shaver St (runs through Pasadena / South Houston, TX). Existing Shaver St stations are Shell (3028, 4363), Valero (3409), Chevron (4120), Hi TEK (3602 S Shaver). May not be branded yet; confirm address with J.R."
-TX-03,Southmore,TX,Pasadena,"302 W Southmore Ave, Pasadena, TX 77502",29.690834,-95.214644,,,,,2026-11-19,"Pemex-branded (GasBuddy, OSM); geocoded via US Census."
-TX-04,Broadway,TX,Houston,,,,,,,,2026-11-19,"UNCERTAIN: two Pemex stations on Broadway in Houston: 3034 Broadway St, Houston, TX 77017 (29.696909, -95.277843) and 9112 N Broadway, Houston, TX 77034 (29.629523, -95.221214). Confirm which one with J.R."
-TX-05,Kress,TX,Houston,"747 Kress St, Houston, TX 77020",29.775659,-95.307333,,,,,2026-11-19,Pemex-branded station; geocoded via US Census.
-TX-06,Plugerville (Pflugerville),TX,Pflugerville,"15608 Spring Hill Ln, Pflugerville, TX 78660",30.445219,-97.651438,,,,,2026-11-19,"Name given as 'Plugerville'; only Pemex in Pflugerville (GasBuddy 'Pemex', also listed as CDMX-ATX / Springhill Grocery)."
-CA-01,Gill's,CA,Hanford,"7954 Lacey Blvd, Hanford, CA 93230",36.328061,-119.599976,,,,,2026-11-19,"Gill's Truck Stop, listed as Pemex (Trucker Guide, liquor license)."
-CA-02,Maherali (Porterville),CA,Porterville,"1391 E Springville Ave, Porterville, CA 93257",36.054906,-118.986233,,,,,2026-11-19,"Maherali, Inc. operates Pemex / Bob's Tiny Mart at this address."
-CA-03,Dixon,CA,Dixon,"483 N Adams St, Dixon, CA 95620",38.44933,-121.826275,,,,,2026-11-19,Pemex Gas / Dixon Liquor; only Pemex in Dixon.
-CA-04,Vacaville,CA,Vacaville,"1193 E Monte Vista Ave, Vacaville, CA 95688",38.360805,-121.97492,,,,,2026-11-19,Only Pemex listed in Vacaville.
-CA-05,Montebello,CA,Montebello,"1436 E Washington Blvd, Montebello, CA 90640",33.996987,-118.123163,,,,,2026-11-19,"Pemex (GasBuddy, Apple Maps); coords from map listing (Census geocoder had no match)."
-CA-06,Victorville (KS),CA,Victorville,"15655 US Highway 395, Victorville, CA 92394",34.535051,-117.399335,,,,,2026-11-19,"High Desert Truck Stop, KS Properties Inc; listed as Pemex."
-CA-07,Archer (Devon),CA,Mojave,"16660 Sierra Hwy, Mojave, CA 93501",35.064275,-118.177363,,,,,2026-11-19,Archer Travel Center (Ramos/Strong Inc.); listed as Pemex.
-CA-08,Union Village,CA,Bakersfield,"2201 S Union Ave, Bakersfield, CA 93307",35.324477,-119.003103,,,,,2026-11-19,Listed as 'Union Village Pemex'.
-CA-09,GH (Delano),CA,Delano,"14314 County Line Rd, Delano, CA 93215",35.790418,-119.228642,,,,,2026-11-19,Only Pemex in Delano area.
-CA-10,Truck Net (Otay Mesa),CA,San Diego,"8490 Avenida de la Fuente, San Diego, CA 92154",32.557049,-116.960657,,,,,2026-11-19,"TruckNet LLC truck stop, Otay Mesa (company site). Pemex branding not visible online yet."
-CA-11,Gill's Investment,CA,Madera,"900 S Gateway Dr, Madera, CA 93637",36.953542,-120.052615,,,,,2026-11-19,"La Plaza 24, operated by Gill Investments Inc. (liquor license); listed as Pemex."
-CA-12,Oasis Market,CA,,,,,,,,,2026-11-19,"UNCERTAIN: no Pemex-branded 'Oasis Market' found in CA. Best guess: Oasis Market & Truck Stop, 23215 Ave 56, Ducor, CA 93218 (currently Valero). Confirm with J.R."
-CA-13,Bibi Fuel,CA,Los Angeles,"1358 Firestone Blvd, Los Angeles, CA 90001",33.960097,-118.2503,,,,,2026-11-19,Bibi Fuel Inc.; phone matches Pemex listing in Florence-Graham (323-587-1765).
-CA-14,Windy Cove,CA,Palm Springs,"60490 Overture Dr, Palm Springs, CA 92262",33.887976,-116.606599,,,,,2026-11-19,Windy Cove Market & Gas; Apple Maps and OSM list Pemex at this address. Coords from OSM.
-CA-15,SST Fuel,CA,Bloomington,"18689 Valley Blvd, Bloomington, CA 92316",34.070434,-117.3964,,,,,2026-11-19,SST Fuel Inc. (health/U-Haul records); listed as Pemex.
-CA-16,Doolys Enterprise,CA,Hesperia,"15515 Bear Valley Rd, Hesperia, CA 92345",34.470569,-117.325145,,,,,2026-11-19,Dooly's Enterprises LLC = Hesperia Gas & Mart (liquor license). From business records; Pemex branding not visible online yet.
-CA-17,Alphaco Inc,CA,Napa,"2500 Laurel St, Napa, CA 94558",38.294009,-122.302598,,,,,2026-11-19,Alphaco Inc gas station (business records). Pemex branding not visible online yet.
-CA-18,JSJ Venture,CA,Rialto,"1325 W Foothill Blvd, Rialto, CA 92376",34.106687,-117.397165,,,,,2026-11-19,JSJ Venture Inc. = Rialto Sinclair (liquor license). Currently Sinclair-branded online.
-CA-19,ASGS Inc,CA,,,,,,,,,2026-11-19,"UNCERTAIN: no CA business record found for ASGS Inc. Pemex CA sites not matched to any name: 318 White Ln, Bakersfield (Sam's Market); 14515 Joanbridge St, Baldwin Park; 2001 State Hwy 58, Mojave (Mojave Truck Stop). Confirm with J.R."
-CA-20,Sacramento,CA,Sacramento,"4300 Watt Ave, Sacramento, CA 95821",38.643331,-121.383168,,,,,2026-11-19,'PEMEX Sacramento'; only Pemex in Sacramento.
+TX-01,Park Place,TX,Houston,"7922 Park Place Blvd, Houston, TX 77087",29.685406,-95.281347,Open,,,,2026-11-19,Pemex-branded station listed on GasBuddy/Google; geocoded via US Census.
+TX-02,Shaver,TX,,,,,Open,,,,2026-11-19,"UNCERTAIN: no Pemex-branded station found on Shaver St (runs through Pasadena / South Houston, TX). Existing Shaver St stations are Shell (3028, 4363), Valero (3409), Chevron (4120), Hi TEK (3602 S Shaver). May not be branded yet; confirm address with J.R."
+TX-03,Southmore,TX,Pasadena,"302 W Southmore Ave, Pasadena, TX 77502",29.690834,-95.214644,Open,,,,2026-11-19,"Pemex-branded (GasBuddy, OSM); geocoded via US Census."
+TX-04,Broadway,TX,Houston,,,,Open,,,,2026-11-19,"UNCERTAIN: two Pemex stations on Broadway in Houston: 3034 Broadway St, Houston, TX 77017 (29.696909, -95.277843) and 9112 N Broadway, Houston, TX 77034 (29.629523, -95.221214). Confirm which one with J.R."
+TX-05,Kress,TX,Houston,"747 Kress St, Houston, TX 77020",29.775659,-95.307333,Open,,,,2026-11-19,Pemex-branded station; geocoded via US Census.
+TX-06,Plugerville (Pflugerville),TX,Pflugerville,"15608 Spring Hill Ln, Pflugerville, TX 78660",30.445219,-97.651438,Open,,,,2026-11-19,"Name given as 'Plugerville'; only Pemex in Pflugerville (GasBuddy 'Pemex', also listed as CDMX-ATX / Springhill Grocery)."
+CA-01,Gill's,CA,Hanford,"7954 Lacey Blvd, Hanford, CA 93230",36.328061,-119.599976,Open,,,,2026-11-19,"Gill's Truck Stop, listed as Pemex (Trucker Guide, liquor license)."
+CA-02,Maherali (Porterville),CA,Porterville,"1391 E Springville Ave, Porterville, CA 93257",36.054906,-118.986233,Open,,,,2026-11-19,"Maherali, Inc. operates Pemex / Bob's Tiny Mart at this address."
+CA-03,Dixon,CA,Dixon,"483 N Adams St, Dixon, CA 95620",38.44933,-121.826275,Open,,,,2026-11-19,Pemex Gas / Dixon Liquor; only Pemex in Dixon.
+CA-04,Vacaville,CA,Vacaville,"1193 E Monte Vista Ave, Vacaville, CA 95688",38.360805,-121.97492,Open,,,,2026-11-19,Only Pemex listed in Vacaville.
+CA-05,Montebello,CA,Montebello,"1436 E Washington Blvd, Montebello, CA 90640",33.996987,-118.123163,Open,,,,2026-11-19,"Pemex (GasBuddy, Apple Maps); coords from map listing (Census geocoder had no match)."
+CA-06,Victorville (KS),CA,Victorville,"15655 US Highway 395, Victorville, CA 92394",34.535051,-117.399335,Open,,,,2026-11-19,"High Desert Truck Stop, KS Properties Inc; listed as Pemex."
+CA-07,Archer (Devon),CA,Mojave,"16660 Sierra Hwy, Mojave, CA 93501",35.064275,-118.177363,Open,,,,2026-11-19,Archer Travel Center (Ramos/Strong Inc.); listed as Pemex.
+CA-08,Union Village,CA,Bakersfield,"2201 S Union Ave, Bakersfield, CA 93307",35.324477,-119.003103,Open,,,,2026-11-19,Listed as 'Union Village Pemex'.
+CA-09,GH (Delano),CA,Delano,"14314 County Line Rd, Delano, CA 93215",35.790418,-119.228642,Open,,,,2026-11-19,Only Pemex in Delano area.
+CA-10,Truck Net (Otay Mesa),CA,San Diego,"8490 Avenida de la Fuente, San Diego, CA 92154",32.557049,-116.960657,Open,,,,2026-11-19,"TruckNet LLC truck stop, Otay Mesa (company site). Pemex branding not visible online yet."
+CA-11,Gill's Investment,CA,Madera,"900 S Gateway Dr, Madera, CA 93637",36.953542,-120.052615,Open,,,,2026-11-19,"La Plaza 24, operated by Gill Investments Inc. (liquor license); listed as Pemex."
+CA-12,Oasis Market,CA,,,,,Open,,,,2026-11-19,"UNCERTAIN: no Pemex-branded 'Oasis Market' found in CA. Best guess: Oasis Market & Truck Stop, 23215 Ave 56, Ducor, CA 93218 (currently Valero). Confirm with J.R."
+CA-13,Bibi Fuel,CA,Los Angeles,"1358 Firestone Blvd, Los Angeles, CA 90001",33.960097,-118.2503,Open,,,,2026-11-19,Bibi Fuel Inc.; phone matches Pemex listing in Florence-Graham (323-587-1765).
+CA-14,Windy Cove,CA,Palm Springs,"60490 Overture Dr, Palm Springs, CA 92262",33.887976,-116.606599,Open,,,,2026-11-19,Windy Cove Market & Gas; Apple Maps and OSM list Pemex at this address. Coords from OSM.
+CA-15,SST Fuel,CA,Bloomington,"18689 Valley Blvd, Bloomington, CA 92316",34.070434,-117.3964,Open,,,,2026-11-19,SST Fuel Inc. (health/U-Haul records); listed as Pemex.
+CA-16,Doolys Enterprise,CA,Hesperia,"15515 Bear Valley Rd, Hesperia, CA 92345",34.470569,-117.325145,Open,,,,2026-11-19,Dooly's Enterprises LLC = Hesperia Gas & Mart (liquor license). From business records; Pemex branding not visible online yet.
+CA-17,Alphaco Inc,CA,Napa,"2500 Laurel St, Napa, CA 94558",38.294009,-122.302598,Open,,,,2026-11-19,Alphaco Inc gas station (business records). Pemex branding not visible online yet.
+CA-18,JSJ Venture,CA,Rialto,"1325 W Foothill Blvd, Rialto, CA 92376",34.106687,-117.397165,Open,,,,2026-11-19,JSJ Venture Inc. = Rialto Sinclair (liquor license). Currently Sinclair-branded online.
+CA-19,ASGS Inc,CA,,,,,Open,,,,2026-11-19,"UNCERTAIN: no CA business record found for ASGS Inc. Pemex CA sites not matched to any name: 318 White Ln, Bakersfield (Sam's Market); 14515 Joanbridge St, Baldwin Park; 2001 State Hwy 58, Mojave (Mojave Truck Stop). Confirm with J.R."
+CA-20,Sacramento,CA,Sacramento,"4300 Watt Ave, Sacramento, CA 95821",38.643331,-121.383168,Open,,,,2026-11-19,'PEMEX Sacramento'; only Pemex in Sacramento.
+CA-21,US Petro,CA,Kingsburg,"1599 Mehlert St, Kingsburg, CA 93631",36.507103,-119.55098,Lost,,,,2026-11-19,"Lost (per J.R., Nov 19, 2026). Address from CA liquor license / CDTFA notice (US Petro, 1599 Mehlert St); also listed as Pemex on maps. Geocoded via US Census."

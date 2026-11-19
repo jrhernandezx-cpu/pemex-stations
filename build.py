@@ -13,7 +13,9 @@ import base64, csv, io, json, os, sys, html, datetime, urllib.request, pathlib
 SHEET_ID = os.environ.get("PEMEX_SHEET_ID", "")
 HERE = pathlib.Path(__file__).resolve().parent
 COLS = ["ID", "Name", "State", "City", "Address", "Latitude", "Longitude", "Status",
-        "Operator or owner contact", "Pemex go-live date", "Fuel volume or sales", "Last updated", "Notes"]
+        "Operator or owner contact", "Date branded", "Date debranded", "Cost estimate",
+        "Fuel volume or sales", "Last updated", "Notes"]
+ALIASES = {"Pemex go-live date": "Date branded"}  # old header names still accepted
 
 
 def load_text(args):
@@ -32,7 +34,7 @@ def load_text(args):
 
 
 def parse(text):
-    rows = list(csv.DictReader(io.StringIO(text)))
+    rows = [{ALIASES.get(k, k): v for k, v in r.items()} for r in csv.DictReader(io.StringIO(text))]
     missing = [c for c in COLS if c not in (rows[0].keys() if rows else [])]
     if missing:
         sys.exit(f"Sheet is missing columns: {missing}")
@@ -77,7 +79,7 @@ table{border-collapse:collapse;width:100%;font-size:.9rem}
 th,td{padding:6px 8px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}
 th{background:#eef3f0;cursor:pointer;white-space:nowrap;position:sticky;top:0}
 th.asc:after{content:" ▲"}th.desc:after{content:" ▼"}
-td:first-child,td:nth-child(8){white-space:nowrap}td.notes{max-width:360px;color:#555;font-size:.8rem}
+td:first-child,td:nth-child(7),td:nth-child(8),td:nth-child(10){white-space:nowrap}td.notes{max-width:360px;color:#555;font-size:.8rem}
 tr.lost{opacity:.6}tr:hover{background:#fafcfb}
 .badge{padding:2px 8px;border-radius:10px;color:#fff;font-size:.8rem;white-space:nowrap}
 footer{font-size:.8rem;color:#666;padding:12px 16px;text-align:center}
@@ -96,14 +98,14 @@ footer{font-size:.8rem;color:#666;padding:12px 16px;text-align:center}
 </div>
 <div class="tablewrap"><table id="tbl"><thead><tr>
 <th data-k="ID">ID</th><th data-k="Name">Name</th><th data-k="State">State</th><th data-k="City">City</th>
-<th data-k="Address">Address</th><th data-k="status">Status</th><th data-k="Pemex go-live date">Go-live</th>
+<th data-k="Address">Address</th><th data-k="status">Status</th><th data-k="Date branded">Branded</th><th data-k="Date debranded">Debranded</th><th data-k="Cost estimate">Cost est.</th>
 <th data-k="Last updated">Updated</th><th data-k="Notes" class="notes">Notes</th></tr></thead><tbody></tbody></table></div>
 <p id="nomap" style="font-size:.85rem;color:#666"></p>
 </main>
 <footer>Map data © OpenStreetMap contributors</footer>
 <script>
 const STATIONS = __DATA__;
-const COLORS = {Open:"#1a9850",Converting:"#fdae61",Planned:"#4575b4",Lost:"#d73027",Unknown:"#9e9e9e"};
+const COLORS = {Open:"#1a9850",Converting:"#fdae61",Planned:"#4575b4",Lead:"#8e44ad",Lost:"#d73027",Unknown:"#9e9e9e"};
 STATIONS.forEach(s=>{s.status = COLORS[s.Status] ? s.Status : "Unknown";});
 const $=id=>document.getElementById(id);
 const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -112,7 +114,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,att
 const markers=[];
 STATIONS.forEach(s=>{ if(s.lat==null) return;
   const m=L.circleMarker([s.lat,s.lng],{radius:8,color:"#333",weight:1,fillColor:COLORS[s.status],fillOpacity:.9});
-  m.bindPopup(`<b>${esc(s.ID)} · ${esc(s.Name)}</b><br>${esc(s.Address)}<br>Status: ${esc(s.status)}`+(s["Pemex go-live date"]?`<br>Go-live: ${esc(s["Pemex go-live date"])}`:""));
+  m.bindPopup(`<b>${esc(s.ID)} · ${esc(s.Name)}</b><br>${esc(s.Address)}<br>Status: ${esc(s.status)}`+[["Date branded","Branded"],["Date debranded","Debranded"],["Cost estimate","Cost estimate"]].map(([k,l])=>s[k]?`<br>${l}: ${esc(s[k])}`:"").join(""));
   markers.push({s,m});});
 $("legend").innerHTML=Object.entries(COLORS).map(([k,v])=>`<span><span class="dot" style="background:${v}"></span>${k}</span>`).join("");
 const uniq=a=>[...new Set(a)].sort();
@@ -126,10 +128,11 @@ function visible(s){const q=$("q").value.toLowerCase(),st=$("fState").value,ss=$
 function cards(){const vis=STATIONS.filter(s=>$("showLost").checked||s.status!=="Lost");
   const c=[["Total",vis.length]];const by=(k)=>{const o={};vis.forEach(s=>o[s[k]]=(o[s[k]]||0)+1);return o;};
   Object.entries(by("State")).sort().forEach(([k,v])=>c.push([k,v]));
-  Object.entries(by("status")).sort().forEach(([k,v])=>c.push([k,v]));
+  const bs=by("status");  // always show the working statuses (incl. Lead); Lost/Unknown only when present
+  Object.keys(COLORS).forEach(k=>{if(["Open","Converting","Planned","Lead"].includes(k)||bs[k])c.push([k,bs[k]||0]);});
   $("cards").innerHTML=c.map(([k,v])=>`<div class="card"><b>${v}</b><span>${esc(k)}</span></div>`).join("");}
 function render(){const rows=STATIONS.filter(visible).sort((a,b)=>String(a[sortK]).localeCompare(String(b[sortK]),undefined,{numeric:true})*sortDir);
-  document.querySelector("#tbl tbody").innerHTML=rows.map(s=>`<tr class="${s.status==="Lost"?"lost":""}"><td>${esc(s.ID)}</td><td>${esc(s.Name)}</td><td>${esc(s.State)}</td><td>${esc(s.City)}</td><td>${esc(s.Address)}</td><td><span class="badge" style="background:${COLORS[s.status]}">${esc(s.status)}</span></td><td>${esc(s["Pemex go-live date"])}</td><td>${esc(s["Last updated"])}</td><td class="notes">${esc(s.Notes)}</td></tr>`).join("");
+  document.querySelector("#tbl tbody").innerHTML=rows.map(s=>`<tr class="${s.status==="Lost"?"lost":""}"><td>${esc(s.ID)}</td><td>${esc(s.Name)}</td><td>${esc(s.State)}</td><td>${esc(s.City)}</td><td>${esc(s.Address)}</td><td><span class="badge" style="background:${COLORS[s.status]}">${esc(s.status)}</span></td><td>${esc(s["Date branded"])}</td><td>${esc(s["Date debranded"])}</td><td>${esc(s["Cost estimate"])}</td><td>${esc(s["Last updated"])}</td><td class="notes">${esc(s.Notes)}</td></tr>`).join("");
   markers.forEach(({s,m})=>{visible(s)?m.addTo(map):m.remove();});
   document.querySelectorAll("th").forEach(th=>th.className=(th.classList.contains("notes")?"notes ":"")+(th.dataset.k===sortK?(sortDir>0?"asc":"desc"):""));
   cards();

@@ -127,7 +127,6 @@ function cards(){const vis=STATIONS.filter(s=>$("showLost").checked||s.status!==
   const c=[["Total",vis.length]];const by=(k)=>{const o={};vis.forEach(s=>o[s[k]]=(o[s[k]]||0)+1);return o;};
   Object.entries(by("State")).sort().forEach(([k,v])=>c.push([k,v]));
   Object.entries(by("status")).sort().forEach(([k,v])=>c.push([k,v]));
-  c.push(["On map",vis.filter(s=>s.lat!=null).length]);
   $("cards").innerHTML=c.map(([k,v])=>`<div class="card"><b>${v}</b><span>${esc(k)}</span></div>`).join("");}
 function render(){const rows=STATIONS.filter(visible).sort((a,b)=>String(a[sortK]).localeCompare(String(b[sortK]),undefined,{numeric:true})*sortDir);
   document.querySelector("#tbl tbody").innerHTML=rows.map(s=>`<tr class="${s.status==="Lost"?"lost":""}"><td>${esc(s.ID)}</td><td>${esc(s.Name)}</td><td>${esc(s.State)}</td><td>${esc(s.City)}</td><td>${esc(s.Address)}</td><td><span class="badge" style="background:${COLORS[s.status]}">${esc(s.status)}</span></td><td>${esc(s["Pemex go-live date"])}</td><td>${esc(s["Last updated"])}</td><td class="notes">${esc(s.Notes)}</td></tr>`).join("");

@@ -66,56 +66,54 @@ TEMPLATE = r"""<!doctype html>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--g:#00563b;--g2:#006847;--r:#ce1126;--ink:#1d2327;--muted:#6b747b;--line:#e8ebee;--bg:#f5f6f4;--card:#fff;--rad:14px;--sh:0 1px 2px rgba(16,24,40,.04),0 4px 14px rgba(16,24,40,.06)}
+:root{--g:#00563b;--r:#ce1126;--ink:#1f2326;--muted:#6f767b;--line:#e3e5e3;--bg:#fafaf8;--rad:4px}
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.45}
-header{background:linear-gradient(135deg,var(--g) 0%,var(--g2) 100%);color:#fff;border-bottom:3px solid var(--r)}
-.hwrap{max-width:1200px;margin:0 auto;padding:22px 24px;display:flex;align-items:center;gap:18px}
-header .logo{flex:none;width:60px;height:60px;background:#fff;border-radius:14px;padding:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.5;font-size:15px}
+header{background:var(--g);color:#fff;border-bottom:2px solid var(--r)}
+.hwrap{max-width:1120px;margin:0 auto;padding:20px 24px;display:flex;align-items:center;gap:16px}
+header .logo{flex:none;width:52px;height:52px;background:#fff;border-radius:var(--rad);padding:6px;display:flex;align-items:center;justify-content:center}
 header .logo img{width:100%;height:100%;object-fit:contain}
-header h1{margin:0;font-size:1.75rem;font-weight:700;letter-spacing:.01em}
-header small{display:block;margin-top:2px;font-size:.8rem;opacity:.8;letter-spacing:.02em}
-main{max-width:1200px;margin:0 auto;padding:24px}
-.panel{background:var(--card);border-radius:var(--rad);box-shadow:var(--sh);overflow:hidden}
+header h1{margin:0;font-size:1.5rem;font-weight:600;letter-spacing:.005em}
+header small{display:block;margin-top:1px;font-size:.8rem;opacity:.75}
+main{max-width:1120px;margin:0 auto;padding:24px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
 #map{height:56vh;min-height:340px}
-.mapbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.mapbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:14px}
-.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;box-shadow:0 0 0 2px #fff,0 0 0 3px rgba(0,0,0,.08)}
-.toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--ink);font-weight:500}
-.toggle input{accent-color:var(--g2);width:16px;height:16px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin:20px 0}
-.card{background:var(--card);border-radius:12px;box-shadow:var(--sh);padding:14px 16px;border-top:3px solid var(--line)}
-.card b{display:block;font-size:1.9rem;font-weight:700;line-height:1.1;letter-spacing:-.02em}
-.card span{display:block;margin-top:4px;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
-.card.total{border-top-color:var(--g2)}
-.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px}
-.controls input,.controls select{font:inherit;font-size:.92rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
-.controls input:focus,.controls select:focus{border-color:var(--g2);box-shadow:0 0 0 3px rgba(0,104,71,.12)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;position:relative;top:-1px}
+.toggle{display:inline-flex;align-items:center;gap:7px;cursor:pointer;color:var(--ink)}
+.toggle input{accent-color:var(--g);width:14px;height:14px;margin:0}
+#summary{margin:18px 2px 22px;font-size:1.05rem;color:var(--ink)}
+#summary .sep{color:#b3b8bb;margin:0 .5em}#summary .nw{white-space:nowrap}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.controls input,.controls select{font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:var(--rad);background:#fff;color:var(--ink);outline:none}
+.controls input:focus,.controls select:focus{border-color:var(--g)}
 .controls input[type=search]{flex:1;min-width:200px}
 .tablewrap{overflow:auto;max-height:70vh}
 table{border-collapse:separate;border-spacing:0;width:100%;font-size:.9rem}
-th,td{padding:12px 16px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line)}
-th{position:sticky;top:0;z-index:1;background:#fafbfa;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);cursor:pointer;white-space:nowrap;user-select:none}
+th,td{padding:11px 14px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line)}
+th{position:sticky;top:0;z-index:1;background:#fff;font-size:.82rem;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;user-select:none}
 th.asc:after{content:" ↑"}th.desc:after{content:" ↓"}
-td:first-child{font-weight:600}td:nth-child(2){white-space:nowrap;color:var(--muted)}td:nth-child(3){color:#444}
-tbody tr{transition:background .12s}tbody tr:hover{background:#f6faf8}tbody tr:last-child td{border-bottom:0}
+td:first-child{font-weight:500}td:nth-child(2){white-space:nowrap;color:var(--muted)}
+tbody tr:hover{background:#f7f8f6}tbody tr:last-child td{border-bottom:0}
 tr.lost td{opacity:.55}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:.75rem;font-weight:600;white-space:nowrap;color:var(--c);background:color-mix(in srgb,var(--c) 12%,#fff)}
-.pill:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c)}
+.pill{white-space:nowrap}
+.pill:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c);margin-right:7px;position:relative;top:-1px}
 #nomap{font-size:.82rem;color:var(--muted);margin:12px 2px 0}
 footer{font-size:.75rem;color:var(--muted);padding:8px 24px 28px;text-align:center}
-.leaflet-popup-content-wrapper{border-radius:12px;box-shadow:var(--sh)}.leaflet-popup-content{font-family:Inter,system-ui,sans-serif;font-size:.85rem;line-height:1.5;margin:12px 16px}
+.leaflet-popup-content-wrapper{border-radius:var(--rad);box-shadow:0 1px 4px rgba(0,0,0,.18)}.leaflet-popup-content{font-family:Inter,system-ui,sans-serif;font-size:.85rem;line-height:1.5;margin:10px 14px}
 .leaflet-container{font-family:inherit;background:#eef0ee}
 .leaflet-tile-pane{filter:grayscale(1) contrast(.88) brightness(1.08)}
-@media (max-width:600px){.hwrap{padding:16px;gap:12px}header .logo{width:46px;height:46px;border-radius:11px;padding:5px}header h1{font-size:1.3rem}header small{font-size:.72rem}
-main{padding:14px}#map{height:44vh;min-height:280px}.cards{grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}.card{padding:12px 14px}.card b{font-size:1.6rem}
-th,td{padding:10px 12px}td:nth-child(3){min-width:180px}.controls select{flex:1}}
+.leaflet-bar,.leaflet-bar a{border-radius:var(--rad)!important}
+@media (max-width:600px){.hwrap{padding:14px 16px;gap:12px}header .logo{width:42px;height:42px;padding:5px}header h1{font-size:1.25rem}header small{font-size:.72rem}
+main{padding:14px}#map{height:44vh;min-height:280px}#summary{margin:14px 2px 16px;font-size:1rem}
+th,td{padding:10px 12px}td:nth-child(3){min-width:180px}.controls input[type=search]{flex:1 1 100%}.controls select{flex:1}}
 </style></head><body>
 <header><div class="hwrap"><div class="logo"><img src="__LOGO__" alt="PEMEX eagle logo"></div><div><h1>PEMEX Stations</h1><small>Updated __BUILT__</small></div></div></header>
 <main>
 <div class="panel"><div id="map"></div>
 <div class="mapbar"><div class="legend" id="legend"></div><label class="toggle"><input type="checkbox" id="showLost"> Show Lost stations</label></div></div>
-<div class="cards" id="cards"></div>
+<p id="summary"></p>
 <div class="controls">
  <input type="search" id="q" placeholder="Search station, city or address">
  <select id="fState"><option value="">All states</option></select>
@@ -139,7 +137,7 @@ STATIONS.forEach(s=>{ if(s.lat==null) return;
   const m=L.circleMarker([s.lat,s.lng],{radius:7,color:"#fff",weight:2,fillColor:COLORS[s.status],fillOpacity:1});
   m.bindPopup(`<b>${esc(s.Name)}</b><br>${esc(s.Address)}<br>Status: ${esc(s.status)}`+[["Operator or owner contact","Operator"],["Date branded","Date branded"],["Date debranded","Date debranded"],["Cost estimate","Cost estimate"]].map(([k,l])=>s[k]?`<br>${l}: ${esc(s[k])}`:"").join(""));
   markers.push({s,m});});
-$("legend").innerHTML=Object.entries(COLORS).map(([k,v])=>`<span><span class="dot" style="background:${v}"></span>${k}</span>`).join("");
+$("legend").innerHTML=Object.entries(COLORS).filter(([k])=>STATIONS.some(s=>s.status===k)).map(([k,v])=>`<span><span class="dot" style="background:${v}"></span>${k}</span>`).join("");
 const uniq=a=>[...new Set(a)].sort();
 uniq(STATIONS.map(s=>s.State)).forEach(v=>$("fState").insertAdjacentHTML("beforeend",`<option>${esc(v)}</option>`));
 Object.keys(COLORS).forEach(v=>$("fStatus").insertAdjacentHTML("beforeend",`<option>${v}</option>`));
@@ -149,11 +147,11 @@ function visible(s){const q=$("q").value.toLowerCase(),st=$("fState").value,ss=$
   if(!ss&&s.status==="Lost"&&!$("showLost").checked)return false;
   if(q&&!Object.values(s).join(" ").toLowerCase().includes(q))return false; return true;}
 function cards(){const vis=STATIONS.filter(s=>$("showLost").checked||s.status!=="Lost");
-  const c=[["Total",vis.length]];const by=(k)=>{const o={};vis.forEach(s=>o[s[k]]=(o[s[k]]||0)+1);return o;};
-  Object.entries(by("State")).sort().forEach(([k,v])=>c.push([k,v]));
-  const bs=by("status");  // always show the working statuses (incl. Lead); Lost/Unknown only when present
-  Object.keys(COLORS).forEach(k=>{if(["Open","Converting","Planned","Lead"].includes(k)||bs[k])c.push([k,bs[k]||0]);});
-  $("cards").innerHTML=c.map(([k,v],i)=>`<div class="card${i?"":" total"}" style="${COLORS[k]?`border-top-color:${COLORS[k]}`:""}"><b>${v}</b><span>${esc(k)}</span></div>`).join("");}
+  const SN={CA:"California",TX:"Texas"};const by=(k)=>{const o={};vis.forEach(s=>o[s[k]]=(o[s[k]]||0)+1);return o;};
+  const parts=[`${vis.length} station${vis.length===1?"":"s"}`];
+  Object.entries(by("State")).sort().forEach(([k,v])=>parts.push(`${v} ${esc(SN[k]||k)}`));
+  const bs=by("status");Object.keys(COLORS).forEach(k=>{if(bs[k])parts.push(`${bs[k]} ${k.toLowerCase()}`);});
+  $("summary").innerHTML=parts.map(t=>`<span class="nw">${t}</span>`).join('<span class="sep">·</span>');}
 function render(){const rows=STATIONS.filter(visible).sort((a,b)=>String(a[sortK]).localeCompare(String(b[sortK]),undefined,{numeric:true})*sortDir);
   document.querySelector("#tbl tbody").innerHTML=rows.map(s=>`<tr class="${s.status==="Lost"?"lost":""}"><td>${esc(s.Name)}</td><td>${esc(s.loc)}</td><td>${esc(s.Address)}</td><td><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></td></tr>`).join("");
   markers.forEach(({s,m})=>{visible(s)?m.addTo(map):m.remove();});

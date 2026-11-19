@@ -85,8 +85,6 @@ main{max-width:1120px;margin:0 auto;padding:24px}
 .mapbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:14px}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;position:relative;top:-1px}
-.toggle{display:inline-flex;align-items:center;gap:7px;cursor:pointer;color:var(--ink)}
-.toggle input{accent-color:var(--g);width:14px;height:14px;margin:0}
 .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
 .controls input,.controls select{font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:var(--rad);background:#fff;color:var(--ink);outline:none}
 .controls input:focus,.controls select:focus{border-color:var(--g)}
@@ -97,7 +95,6 @@ th{position:sticky;top:0;z-index:1;background:#fff;font-size:.82rem;font-weight:
 th.asc:after{content:" ↑"}th.desc:after{content:" ↓"}
 td:first-child{font-weight:500}td:nth-child(2){white-space:nowrap;color:var(--muted)}
 tbody tr:hover{background:#f7f8f6}tbody tr:last-child td{border-bottom:0}
-tr.lost td{opacity:.55}
 .pill{white-space:nowrap}
 .pill:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c);margin-right:7px;position:relative;top:-1px}
 #nomap{font-size:.82rem;color:var(--muted);margin:12px 2px 0}
@@ -125,7 +122,6 @@ main{padding:12px 14px}
 .tablewrap{display:none}
 .list{display:block;list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .list li{padding:12px 0;border-bottom:1px solid var(--line)}
-.list li.lost{opacity:.55}
 .l-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .l-top strong{font-weight:600;min-width:0;flex:1;overflow-wrap:anywhere}
 .l-top .pill{flex:none;font-size:.82rem}
@@ -136,7 +132,7 @@ main{padding:12px 14px}
 <header><div class="hwrap"><div class="brand"><img class="logo" src="__LOGO__" alt="PEMEX Stations"></div>__STAT__</div></header>
 <main>
 <div class="panel"><div id="map"></div>
-<div class="mapbar"><div class="legend" id="legend"></div><label class="toggle"><input type="checkbox" id="showLost"> Show Lost stations</label></div></div>
+<div class="mapbar" id="mapbar"><div class="legend" id="legend"></div></div></div>
 <div class="controls">
  <input type="search" id="q" placeholder="Search station, city or address">
  <select id="fState"><option value="">All states</option></select>
@@ -156,36 +152,40 @@ main{padding:12px 14px}
 <footer>__BUILT__<br>Map data © OpenStreetMap contributors</footer>
 <script>
 const STATIONS = __DATA__;
-const COLORS = {Open:"#1a9850",Converting:"#fdae61",Planned:"#4575b4",Lead:"#8e44ad",Lost:"#d73027",Unknown:"#9e9e9e"};
+const COLORS = {Open:"#1a9850",Converting:"#fdae61",Planned:"#4575b4",Lead:"#8e44ad",Unknown:"#9e9e9e"};
 STATIONS.forEach(s=>{s.status = COLORS[s.Status] ? s.Status : "Unknown"; s.loc=[s.City,s.State].filter(Boolean).join(", ");});
 const $=id=>document.getElementById(id);
 const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const map=L.map("map",{scrollWheelZoom:false}).setView([32.5,-108],5);
+map.attributionControl.setPrefix(false);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);  // muted via CSS filter on .leaflet-tile-pane
 const markers=[];
 STATIONS.forEach(s=>{ if(s.lat==null) return;
   const m=L.circleMarker([s.lat,s.lng],{radius:7,color:"#fff",weight:2,fillColor:COLORS[s.status],fillOpacity:1});
   m.bindPopup(`<b>${esc(s.Name)}</b><br>${esc(s.Address)}<br>Status: ${esc(s.status)}`+[["Operator or owner contact","Operator"],["Date branded","Date branded"],["Date debranded","Date debranded"],["Cost estimate","Cost estimate"]].map(([k,l])=>s[k]?`<br>${l}: ${esc(s[k])}`:"").join(""));
   markers.push({s,m});});
-$("legend").innerHTML=Object.entries(COLORS).filter(([k])=>STATIONS.some(s=>s.status===k)).map(([k,v])=>`<span><span class="dot" style="background:${v}"></span>${k}</span>`).join("");
+const usedStatuses=Object.entries(COLORS).filter(([k])=>STATIONS.some(s=>s.status===k));
+if(usedStatuses.length<=1){const bar=$("mapbar"); if(bar) bar.remove();}
+else $("legend").innerHTML=usedStatuses.map(([k,v])=>`<span><span class="dot" style="background:${v}"></span>${k}</span>`).join("");
 const uniq=a=>[...new Set(a)].sort();
 uniq(STATIONS.map(s=>s.State)).forEach(v=>$("fState").insertAdjacentHTML("beforeend",`<option>${esc(v)}</option>`));
-Object.keys(COLORS).forEach(v=>$("fStatus").insertAdjacentHTML("beforeend",`<option>${v}</option>`));
+const presentStatuses=uniq(STATIONS.map(s=>s.status));
+if(presentStatuses.length<=1){const el=$("fStatus"); if(el) el.remove();}
+else presentStatuses.forEach(v=>$("fStatus").insertAdjacentHTML("beforeend",`<option>${esc(v)}</option>`));
 let sortK="loc",sortDir=1;
-function visible(s){const q=$("q").value.toLowerCase(),st=$("fState").value,ss=$("fStatus").value;
+function visible(s){const q=$("q").value.toLowerCase(),st=$("fState").value,ss=$("fStatus")&&$("fStatus").value;
   if(st&&s.State!==st)return false; if(ss&&s.status!==ss)return false;
-  if(!ss&&s.status==="Lost"&&!$("showLost").checked)return false;
   if(q&&!Object.values(s).join(" ").toLowerCase().includes(q))return false; return true;}
 function cmp(a,b){const keys=sortK==="loc"?["State","City","Name"]:[sortK];
   for(const k of keys){const d=String(a[k]??"").localeCompare(String(b[k]??""),undefined,{numeric:true});if(d)return d*sortDir;}return 0;}
 function render(){const rows=STATIONS.filter(visible).sort(cmp);
-  document.querySelector("#tbl tbody").innerHTML=rows.map(s=>`<tr class="${s.status==="Lost"?"lost":""}"><td>${esc(s.Name)}</td><td>${esc(s.loc)}</td><td>${esc(s.Address)}</td><td><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></td></tr>`).join("");
-  $("list").innerHTML=rows.map(s=>`<li class="${s.status==="Lost"?"lost":""}"><div class="l-top"><strong>${esc(s.Name)}</strong><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></div><div class="l-addr">${esc(s.Address)}</div><div class="l-loc">${esc(s.loc)}</div></li>`).join("");
+  document.querySelector("#tbl tbody").innerHTML=rows.map(s=>`<tr><td>${esc(s.Name)}</td><td>${esc(s.loc)}</td><td>${esc(s.Address)}</td><td><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></td></tr>`).join("");
+  $("list").innerHTML=rows.map(s=>`<li><div class="l-top"><strong>${esc(s.Name)}</strong><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></div><div class="l-addr">${esc(s.Address)}</div><div class="l-loc">${esc(s.loc)}</div></li>`).join("");
   markers.forEach(({s,m})=>{visible(s)?m.addTo(map):m.remove();});
   document.querySelectorAll("th").forEach(th=>th.className=th.dataset.k===sortK?(sortDir>0?"asc":"desc"):"");
   const nm=STATIONS.filter(s=>s.lat==null&&visible(s)).map(s=>s.Name);$("nomap").textContent=nm.length?`Not on map yet (address being confirmed): ${nm.join(", ")}`:"";}
 document.querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortDir=(sortK===k)?-sortDir:1;sortK=k;render();});
-["q","fState","fStatus","showLost"].forEach(id=>$(id).addEventListener("input",render));
+["q","fState","fStatus"].forEach(id=>{const el=$(id); if(el) el.addEventListener("input",render);});
 $("fSort").addEventListener("change",()=>{sortK=$("fSort").value;sortDir=1;render();});
 render();
 const pts=markers.map(x=>x.m.getLatLng());if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.1));
@@ -193,21 +193,22 @@ const pts=markers.map(x=>x.m.getLatLng());if(pts.length)map.fitBounds(L.latLngBo
 """
 
 
-def check_build(stations, html_path):
-    """Assert the built page contains every station and default rows == open count."""
+def check_build(stations, html_path, csv_path):
+    """Assert the built page lists every published station and omits Lost rows."""
     ids = [s["ID"] for s in stations]
     if not ids:
         sys.exit("Build check failed: no stations")
     if len(ids) != len(set(ids)):
         sys.exit("Build check failed: duplicate station IDs")
+    if any(s["Status"] == "Lost" for s in stations):
+        sys.exit("Build check failed: Lost stations were not excluded from published data")
     open_n = sum(1 for s in stations if s["Status"] == "Open")
-    default_n = sum(1 for s in stations if s["Status"] != "Lost")
-    # Default table (Lost hidden) should list every Open row. If only Open and Lost
-    # exist, that equals the open count. Other statuses would also appear.
-    others = {s["Status"] for s in stations} - {"Open", "Lost", ""}
+    default_n = len(stations)
+    others = {s["Status"] for s in stations} - {"Open", ""}
     if not others and default_n != open_n:
-        sys.exit(f"Build check failed: default rows {default_n} != open count {open_n}")
+        sys.exit(f"Build check failed: published rows {default_n} != open count {open_n}")
     text = html_path.read_text(encoding="utf-8")
+    csv_text = csv_path.read_text(encoding="utf-8")
     if "max-height:70vh" in text or ".tablewrap{overflow:auto" in text:
         sys.exit("Build check failed: table still has an inner scroll box")
     if 'id="list"' not in text or 'id="tbl"' not in text:
@@ -216,26 +217,35 @@ def check_build(stations, html_path):
         sys.exit("Build check failed: phone header still stacks the count under the logo")
     if "height:45vh" not in text or "min-height:260px" not in text:
         sys.exit("Build check failed: phone map height is not 45vh / min 260px")
+    if "attributionControl:{prefix:false}" not in text and "setPrefix(false)" not in text:
+        sys.exit("Build check failed: Leaflet attribution prefix is still enabled")
+    for blob, label in ((text, "index.html"), (csv_text, "stations.csv")):
+        lower = blob.lower()
+        if "lost" in lower or "us petro" in lower or "showlost" in lower:
+            sys.exit(f"Build check failed: Lost or US Petro still in {label}")
+        if "leafletjs.com" in lower:
+            sys.exit(f"Build check failed: leafletjs.com still in {label}")
     for s in stations:
         if s["ID"] not in text or s["Name"] not in text:
             sys.exit(f"Build check failed: {s['ID']} {s['Name']!r} missing from index.html")
+        if s["ID"] not in csv_text or s["Name"] not in csv_text:
+            sys.exit(f"Build check failed: {s['ID']} {s['Name']!r} missing from stations.csv")
     open_names = [s["Name"] for s in stations if s["Status"] == "Open"]
     if len(open_names) != open_n:
         sys.exit("Build check failed: Open name list does not match open count")
-    if f'"Status": "Open"' in text:
-        # JSON may use different spacing; count Open in the data blob instead
-        pass
     blob_i = text.find("const STATIONS = ")
     if blob_i == -1:
         sys.exit("Build check failed: STATIONS data missing")
     if default_n != open_n and others:
-        print(f"Note: default table rows ({default_n}) include non-Open statuses {sorted(others)}")
+        print(f"Note: published rows ({default_n}) include non-Open statuses {sorted(others)}")
 
 
 def main():
-    stations = parse(load_text(sys.argv[1:]))
+    all_stations = parse(load_text(sys.argv[1:]))
+    stations = [s for s in all_stations if s["Status"] != "Lost"]
     (HERE / "data").mkdir(exist_ok=True)
-    with open(HERE / "data" / "stations.csv", "w", newline="", encoding="utf-8") as f:
+    csv_path = HERE / "data" / "stations.csv"
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=PUBLIC, extrasaction="ignore")
         w.writeheader()
         w.writerows(stations)
@@ -255,7 +265,7 @@ def main():
     for st in ("Converting", "Planned", "Lead"):
         if by_status.get(st):
             pending.append(f"{by_status[st]} {st.lower()}")
-    known = {"Open", "Lost", "", "Converting", "Planned", "Lead"}
+    known = {"Open", "", "Converting", "Planned", "Lead"}
     for st, n in sorted(by_status.items()):
         if st not in known and n:
             pending.append(f"{n} {st.lower()}")
@@ -269,9 +279,10 @@ def main():
            .replace("__LOGO__", logo).replace("__STAT__", stat))
     html_path = HERE / "index.html"
     html_path.write_text(out, encoding="utf-8")
-    check_build(stations, html_path)
+    check_build(stations, html_path, csv_path)
     geo = sum(1 for s in stations if s["lat"] is not None)
-    print(f"Wrote index.html: {len(stations)} stations, {geo} with coordinates, {len(open_rows)} open (default table rows)")
+    skipped = len(all_stations) - len(stations)
+    print(f"Wrote index.html: {len(stations)} stations, {geo} with coordinates, {len(open_rows)} open ({skipped} Lost held in the Sheet only)")
 
 
 if __name__ == "__main__":

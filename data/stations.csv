@@ -1,6 +1,6 @@
 ID,Name,State,City,Address,Status,Operator or owner contact,Date branded,Date debranded,Cost estimate,Last updated,Latitude,Longitude
 TX-01,Park Place,TX,Houston,"7922 Park Place Blvd, Houston, TX 77087",Open,,,,,2026-11-19,29.685406,-95.281347
-TX-02,Shaver Express,TX,Houston,,Open,,,,,2026-11-19,,
+TX-02,Shaver Express,TX,Houston,"9112 N Broadway St, Houston, TX 77034",Open,,,,,2026-11-19,29.629523,-95.221214
 TX-03,Southmore,TX,Pasadena,"302 W Southmore Ave, Pasadena, TX 77502",Open,,,,,2026-11-19,29.690834,-95.214644
 TX-04,Broadway,TX,Houston,"3034 Broadway St, Houston, TX 77017",Open,,,,,2026-11-19,29.696909,-95.277843
 TX-05,Kress,TX,Houston,"747 Kress St, Houston, TX 77020",Open,,,,,2026-11-19,29.775659,-95.307333
@@ -9,7 +9,7 @@ CA-01,Gill's Truck Stop,CA,Hanford,"7954 Lacey Blvd, Hanford, CA 93230",Open,,,,
 CA-02,Maherali (Porterville),CA,Porterville,"1391 E Springville Ave, Porterville, CA 93257",Open,,,,,2026-11-19,36.054906,-118.986233
 CA-03,Dixon,CA,Dixon,"483 N Adams St, Dixon, CA 95620",Open,,,,,2026-11-19,38.44933,-121.826275
 CA-04,Vacaville (ARRM Corp),CA,Vacaville,"1193 E Monte Vista Ave, Vacaville, CA 95688",Open,,,,,2026-11-19,38.360805,-121.97492
-CA-05,Montebello,CA,Montebello,"1436 E Washington Blvd, Montebello, CA 90640",Open,,,,,2026-11-19,33.996987,-118.123163
+CA-05,Montebello,CA,Montebello,"1436 W Washington Blvd, Montebello, CA 90640",Open,,,,,2026-11-19,33.997247,-118.122998
 CA-06,Victorville (KS),CA,Victorville,"15655 US Highway 395, Victorville, CA 92394",Open,,,,,2026-11-19,34.535051,-117.399335
 CA-07,Archer Travel Center (Devon),CA,Mojave,"16660 Sierra Hwy, Mojave, CA 93501",Open,,,,,2026-11-19,35.064275,-118.177363
 CA-08,Union Village,CA,Bakersfield,"2201 S Union Ave, Bakersfield, CA 93307",Open,,,,,2026-11-19,35.324477,-119.003103
@@ -24,5 +24,5 @@ CA-16,Doolys Enterprise,CA,Hesperia,"15515 Bear Valley Rd, Hesperia, CA 92345",O
 CA-17,Alphaco Inc,CA,Napa,"2500 Laurel St, Napa, CA 94558",Open,,,,,2026-11-19,38.294009,-122.302598
 CA-18,JSJ Venture,CA,Rialto,"1325 W Foothill Blvd, Rialto, CA 92376",Open,,,,,2026-11-19,34.106687,-117.397165
 CA-19,ASGS Inc (Lindsay),CA,Lindsay,"340 W Hermosa St, Lindsay, CA 93247",Open,,,,,2026-11-19,36.203812,-119.094494
-CA-20,Sacramento,CA,Sacramento,"4300 Watt Ave, Sacramento, CA 95821",Open,,,,,2026-11-19,38.643331,-121.383168
+CA-20,Sacramento Dunnigan / PEMEX Sacramento,CA,Sacramento,"4300 Watt Ave, Sacramento, CA 95821",Open,,,,,2026-11-19,38.643331,-121.383168
 CA-21,US Petro,CA,Kingsburg,"1599 Mehlert St, Kingsburg, CA 93631",Lost,,,,,2026-11-19,36.507103,-119.55098

@@ -7,7 +7,7 @@ Input (pick one):
   python3 build.py --url "<csv export url>"   # only works if the Sheet is readable without login
 Output: index.html (and data/stations.csv refreshed) in this folder.
 """
-import csv, io, json, os, sys, html, datetime, urllib.request, pathlib
+import base64, csv, io, json, os, sys, html, datetime, urllib.request, pathlib
 
 # Sheet ID is kept out of the public repo; see README in /workspace/pemex-tracker.
 SHEET_ID = os.environ.get("PEMEX_SHEET_ID", "")
@@ -58,8 +58,10 @@ TEMPLATE = r"""<!doctype html>
 <style>
 :root{--g:#006847;--r:#ce1126}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#222;background:#f6f7f8}
-header{background:var(--g);color:#fff;padding:12px 16px;border-bottom:4px solid var(--r)}
-header h1{margin:0;font-size:1.4rem}header small{opacity:.85}
+header{background:var(--g);color:#fff;padding:12px 16px;border-bottom:4px solid var(--r);display:flex;align-items:center;gap:14px}
+header .logo{flex:none;width:64px;height:64px;background:#fff;border-radius:12px;padding:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px #0004}
+header .logo img{width:100%;height:100%;object-fit:contain}
+header h1{margin:0;font-size:1.6rem}header small{opacity:.85}
 main{max-width:1200px;margin:0 auto;padding:12px}
 #map{height:55vh;min-height:320px;border-radius:8px;border:1px solid #ccc}
 .cards{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
@@ -79,9 +81,9 @@ td:first-child,td:nth-child(8){white-space:nowrap}td.notes{max-width:360px;color
 tr.lost{opacity:.6}tr:hover{background:#fafcfb}
 .badge{padding:2px 8px;border-radius:10px;color:#fff;font-size:.8rem;white-space:nowrap}
 footer{font-size:.8rem;color:#666;padding:12px 16px;text-align:center}
-@media (max-width:600px){#map{height:45vh}td.notes{display:none}th.notes{display:none}}
+@media (max-width:600px){header{padding:10px 12px;gap:10px}header .logo{width:48px;height:48px;border-radius:10px;padding:4px}header h1{font-size:1.3rem}#map{height:45vh}td.notes{display:none}th.notes{display:none}}
 </style></head><body>
-<header><h1>Pemex Stations</h1><small>Data last built __BUILT__ from the Pemex Station Tracker sheet</small></header>
+<header><div class="logo"><img src="__LOGO__" alt="Pemex eagle logo"></div><div><h1>Pemex Stations</h1><small>Data last built __BUILT__ from the Pemex Station Tracker sheet</small></div></header>
 <main>
 <div id="map"></div>
 <div class="legend" id="legend"></div>
@@ -147,7 +149,11 @@ def main():
     (HERE / "data" / "stations.csv").write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
     built = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     data = json.dumps(stations, ensure_ascii=False).replace("</", "<\\/")
-    out = TEMPLATE.replace("__DATA__", data).replace("__BUILT__", html.escape(built))
+    logo_path = HERE / "assets" / "pemex-logo.svg"  # Pemex eagle mark, Wikimedia Commons (public domain)
+    if not logo_path.exists():
+        sys.exit(f"Missing logo: {logo_path}")
+    logo = "data:image/svg+xml;base64," + base64.b64encode(logo_path.read_bytes()).decode()
+    out = TEMPLATE.replace("__DATA__", data).replace("__BUILT__", html.escape(built)).replace("__LOGO__", logo)
     (HERE / "index.html").write_text(out, encoding="utf-8")
     geo = sum(1 for s in stations if s["lat"] is not None)
     print(f"Wrote index.html: {len(stations)} stations, {geo} with coordinates")

@@ -91,13 +91,14 @@ main{max-width:868px;margin:0 auto;padding:28px 24px 36px}
 .controls input::placeholder{color:#8a8a8a}
 .controls input:focus{border-color:#555}
 .controls input[type=search]{flex:1;min-width:200px}
-.seg{display:flex;flex:none;border:1px solid var(--line);border-radius:2px;overflow:hidden}
-.seg button{appearance:none;background:transparent;border:0;border-right:1px solid var(--line);margin:0;font:inherit;font-size:.82rem;padding:7px 12px;color:var(--ink);cursor:pointer;line-height:1.2;border-radius:0;box-shadow:none}
-.seg button:last-child{border-right:0}
-.seg button:hover{background:#151515}
-.seg button.on{background:#f2f2f2;color:#0b0b0b}
-.seg button.on:hover{background:#f2f2f2;color:#0b0b0b}
-.seg button .c{opacity:.65;font-variant-numeric:tabular-nums}
+.seg{display:flex;flex:none;align-items:stretch;gap:32px;border:0;border-bottom:1px solid #262626;border-radius:0;overflow:visible;background:transparent}
+.seg button{appearance:none;background:transparent;border:0;margin:0;padding:8px 0 10px;font:inherit;font-size:.82rem;color:#8a8a8a;cursor:pointer;line-height:1.2;border-radius:0;box-shadow:none;position:relative;white-space:nowrap}
+.seg button:hover{background:transparent;color:#c8c8c8}
+.seg button.on{background:transparent;color:#fff}
+.seg button.on:hover{background:transparent;color:#fff}
+.seg button .c{opacity:.55;font-variant-numeric:tabular-nums}
+.seg button.on .c{opacity:.7}
+.seg button.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#d12203}
 tr.empty td{padding:20px 14px;border-bottom:0;color:var(--muted);font-weight:400}
 #list .empty{padding:16px 0;border-bottom:0;color:var(--muted)}
 table{border-collapse:separate;border-spacing:0;width:100%;font-size:.85rem;table-layout:fixed}
@@ -137,10 +138,10 @@ main{max-width:none;padding:12px 14px 20px}
 .mapbar{padding:8px 10px;gap:8px}
 .controls{margin:12px 0;flex-direction:column;align-items:stretch;gap:8px}
 .controls input[type=search]{flex:none;width:100%;min-width:0}
-.seg{width:100%}
-.seg button{flex:1;padding:7px 4px;font-size:.72rem;text-align:center}
+.seg{width:100%;gap:0;justify-content:space-between}
+.seg button{flex:none;padding:8px 0 10px;font-size:.75rem;text-align:left}
 .tablewrap{display:none}
-.list{display:block;list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.list{display:block;list-style:none;margin:0;padding:0;border-top:0}
 .list li{padding:12px 0;border-bottom:1px solid var(--line)}
 .l-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .l-top strong{font-weight:600;min-width:0;flex:1;overflow-wrap:anywhere}

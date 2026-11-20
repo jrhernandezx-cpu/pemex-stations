@@ -64,61 +64,80 @@ TEMPLATE = r"""<!doctype html>
 <title>PEMEX Stations</title>
 <meta name="theme-color" content="#0b0b0b">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira+Condensed:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--g:#00563b;--r:#d12203;--ink:#1f2326;--muted:#6f767b;--line:#e3e5e3;--bg:#fafaf8;--rad:4px;--header:#0b0b0b}
+:root{--g:#00563b;--r:#d12203;--ink:#1f2326;--muted:#6f767b;--line:#e3e5e3;--bg:#fafaf8;--rad:4px;--header:#0b0b0b;--display:"Saira Condensed",Inter,sans-serif}
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.5;font-size:15px}
 header{background:var(--header);color:#fff;border-bottom:2px solid var(--r)}
 .hwrap{max-width:1120px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:28px}
 .brand{display:flex;align-items:center;gap:14px;min-width:0}
 header .logo{display:block;height:44px;width:auto;flex:none}
-.stat{text-align:right;flex:none;line-height:1.2;color:#fff}
-.stat .n{font-size:1.85rem;font-weight:600;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
-.stat .lbl{margin-top:3px;font-size:.82rem;opacity:.9}
-.stat .sub{margin-top:2px;font-size:.75rem;opacity:.7}
-main{max-width:1120px;margin:0 auto;padding:24px}
+.stat{flex:none;display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;line-height:1.15;color:#fff}
+.stat .n{grid-column:1;grid-row:1 / span 2;font-family:var(--display);font-weight:300;font-size:50px;letter-spacing:-.03em;line-height:.85;font-variant-numeric:tabular-nums}
+.stat .lbl{grid-column:2;grid-row:1;align-self:end;margin:0;font-size:.82rem;opacity:.9}
+.stat .sub{grid-column:2;grid-row:2;align-self:start;margin:0;font-size:.75rem;opacity:.7;white-space:nowrap}
+main{max-width:868px;margin:0 auto;padding:28px 24px 36px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
-#map{height:56vh;min-height:340px}
+.mapbleed{background:#0b0b0b}
+#map{height:56vh;min-height:360px;background:#0b0b0b}
 .mapbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
 .legend{display:flex;flex-wrap:wrap;gap:14px}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;position:relative;top:-1px}
 .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
-.controls input,.controls select{font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:var(--rad);background:#fff;color:var(--ink);outline:none}
-.controls input:focus,.controls select:focus{border-color:var(--g)}
+.controls input{font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:var(--rad);background:#fff;color:var(--ink);outline:none}
+.controls input:focus{border-color:var(--g)}
 .controls input[type=search]{flex:1;min-width:200px}
-table{border-collapse:separate;border-spacing:0;width:100%;font-size:.9rem}
-th,td{padding:11px 14px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line)}
+.seg{display:flex;flex:none;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.seg button{appearance:none;background:#fff;border:0;border-right:1px solid var(--line);margin:0;font:inherit;font-size:.82rem;padding:7px 12px;color:var(--ink);cursor:pointer;line-height:1.2;border-radius:0;box-shadow:none}
+.seg button:last-child{border-right:0}
+.seg button:hover{background:#f4f4f2}
+.seg button.on{background:var(--header);color:#fff}
+.seg button.on:hover{background:var(--header);color:#fff}
+.seg button .c{opacity:.65;font-variant-numeric:tabular-nums}
+tr.empty td{padding:20px 14px;border-bottom:0;color:var(--muted);font-weight:400}
+#list .empty{padding:16px 0;border-bottom:0;color:var(--muted)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.85rem;table-layout:fixed}
+th,td{padding:10px 12px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line)}
+th:nth-child(1),td:nth-child(1){width:25%}th:nth-child(2),td:nth-child(2){width:16%}th:nth-child(4),td:nth-child(4){width:12%}
 th{position:sticky;top:0;z-index:1;background:#fff;font-size:.82rem;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;user-select:none}
 th.asc:after{content:" ↑"}th.desc:after{content:" ↓"}
-td:first-child{font-weight:500}td:nth-child(2){white-space:nowrap;color:var(--muted)}
+td:first-child{font-weight:500}td:nth-child(2),td:nth-child(4){white-space:nowrap}td:nth-child(2){color:var(--muted)}
 tbody tr:hover{background:#f7f8f6}tbody tr:last-child td{border-bottom:0}
 .pill{white-space:nowrap}
 .pill:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c);margin-right:7px;position:relative;top:-1px}
 #nomap{font-size:.82rem;color:var(--muted);margin:12px 2px 0}
 footer{font-size:.75rem;color:var(--muted);padding:16px 24px 28px;text-align:center;line-height:1.7}
 .leaflet-popup-content-wrapper{border-radius:var(--rad);box-shadow:0 1px 4px rgba(0,0,0,.18)}.leaflet-popup-content{font-family:Inter,system-ui,sans-serif;font-size:.85rem;line-height:1.5;margin:10px 14px}
-.leaflet-container{font-family:inherit;background:#eef0ee}
-.leaflet-tile-pane{filter:grayscale(1) contrast(.88) brightness(1.08)}
-.leaflet-bar,.leaflet-bar a{border-radius:var(--rad)!important}
-.list,.phone-only{display:none}
+.leaflet-container{font-family:inherit;background:#222529}
+.leaflet-top.leaflet-left{margin-top:10px;margin-left:10px}.leaflet-bar,.leaflet-bar a{border-radius:var(--rad)!important;border-color:#333!important}
+.leaflet-bar a{background:#161616;color:#eee;border-bottom-color:#2a2a2a}
+.leaflet-bar a:hover{background:#222;color:#fff}
+.leaflet-control-attribution{background:rgba(0,0,0,.45)!important;color:rgba(255,255,255,.55);font-size:10px;margin:0 8px 8px!important;padding:2px 7px;border-radius:2px}
+.leaflet-control-attribution a{color:rgba(255,255,255,.7)}
+.pin{background:none!important;border:none!important}
+.pin-hit{width:28px;height:28px;display:flex;align-items:flex-end;justify-content:center}
+.pin-hit svg{display:block}
+tr.ghead td,tr.ghead:hover td{padding:22px 14px 8px;font-family:var(--display);font-size:1.2rem;font-weight:400;letter-spacing:.03em;color:var(--muted);background:#fff;border-bottom:1px solid var(--line);cursor:default}
+#list .ghead{padding:18px 0 8px;font-family:var(--display);font-size:1.2rem;font-weight:400;letter-spacing:.03em;color:var(--muted);border-bottom:1px solid var(--line)}
+#list .ghead:first-child{padding-top:8px}
+.list{display:none}
 @media (max-width:600px){
 .hwrap{flex-wrap:nowrap;padding:8px 14px;gap:12px;align-items:center}
 header .logo{height:32px}
-.stat{width:auto;text-align:right;padding-top:0;border-top:0}
-.stat .n{font-size:24px}
-.stat .lbl{margin-top:1px;font-size:.72rem}
-.stat .sub{margin-top:1px;font-size:.65rem;white-space:nowrap}
-main{padding:12px 14px}
+.stat{width:auto;text-align:left;padding-top:0;border-top:0;column-gap:8px}
+.stat .n{font-size:32px}
+.stat .lbl{font-size:.7rem}
+.stat .sub{font-size:.62rem}
+main{max-width:none;padding:12px 14px 20px}
 #map{height:45vh;min-height:260px}
 .mapbar{padding:8px 10px;gap:8px}
-.controls{margin:12px 0}
-.controls input[type=search]{flex:1 1 100%;min-width:0}
-.controls select{flex:1 1 0;min-width:0}
-.phone-only{display:block}
-#fSort{flex:1 1 100%}
+.controls{margin:12px 0;flex-direction:column;align-items:stretch;gap:8px}
+.controls input[type=search]{flex:none;width:100%;min-width:0}
+.seg{width:100%}
+.seg button{flex:1;padding:7px 4px;font-size:.72rem;text-align:center}
 .tablewrap{display:none}
 .list{display:block;list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .list li{padding:12px 0;border-bottom:1px solid var(--line)}
@@ -128,24 +147,23 @@ main{padding:12px 14px}
 .l-addr,.l-loc{font-size:.82rem;color:var(--muted);margin-top:2px;overflow-wrap:anywhere;line-height:1.4}
 }
 @media (max-width:340px){.stat .sub{display:none}}
-</style></head><body>
+</style>
+<body>
 <header><div class="hwrap"><div class="brand"><img class="logo" src="__LOGO__" alt="PEMEX Stations"></div>__STAT__</div></header>
-<main>
-<div class="panel"><div id="map"></div>
+<div class="mapbleed"><div id="map"></div>
 <div class="mapbar" id="mapbar"><div class="legend" id="legend"></div></div></div>
+<main>
 <div class="controls">
  <input type="search" id="q" placeholder="Search station, city or address">
- <select id="fState"><option value="">All states</option></select>
- <select id="fStatus"><option value="">All statuses</option></select>
- <select id="fSort" class="phone-only" aria-label="Sort list">
-  <option value="loc">Sort: State, city</option>
-  <option value="Name">Sort: Station</option>
-  <option value="Address">Sort: Address</option>
-  <option value="status">Sort: Status</option>
- </select>
+ <div class="seg" id="seg" role="tablist" aria-label="Filter stations">
+  <button type="button" class="on" data-f="all" role="tab" aria-selected="true">All</button>
+  <button type="button" data-f="CA" role="tab" aria-selected="false">California <span class="c" id="nCA">0</span></button>
+  <button type="button" data-f="TX" role="tab" aria-selected="false">Texas <span class="c" id="nTX">0</span></button>
+  <button type="button" data-f="leads" role="tab" aria-selected="false">Leads <span class="c" id="nLead">0</span></button>
+ </div>
 </div>
 <div class="panel tablewrap"><table id="tbl"><thead><tr>
-<th data-k="Name">Station</th><th data-k="loc">City, State</th><th data-k="Address">Address</th><th data-k="status">Status</th></tr></thead><tbody></tbody></table></div>
+<th data-k="Name">Station</th><th data-k="loc">City</th><th data-k="Address">Address</th><th data-k="status">Status</th></tr></thead><tbody></tbody></table></div>
 <ul class="list" id="list"></ul>
 <p id="nomap"></p>
 </main>
@@ -156,45 +174,80 @@ const COLORS = {Open:"#1a9850",Converting:"#fdae61",Planned:"#4575b4",Lead:"#8e4
 STATIONS.forEach(s=>{s.status = COLORS[s.Status] ? s.Status : "Unknown"; s.loc=[s.City,s.State].filter(Boolean).join(", ");});
 const $=id=>document.getElementById(id);
 const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const map=L.map("map",{scrollWheelZoom:false}).setView([32.5,-108],5);
+const map=L.map("map",{scrollWheelZoom:false,zoomSnap:1}).setView([32.5,-108],5);
 map.attributionControl.setPrefix(false);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);  // muted via CSS filter on .leaflet-tile-pane
+// Esri public dark-gray canvas (CARTO dark tiles require an API key).
+const attrib='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://www.esri.com/">Esri</a>';
+L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",{maxZoom:16,attribution:attrib}).addTo(map);
+L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",{maxZoom:16,attribution:""}).addTo(map);
+const pinPath='d="M8 20.8C8 20.8 14.7 12.8 14.7 8.1A6.7 6.7 0 1 0 1.3 8.1C1.3 12.8 8 20.8 8 20.8Z"';
+const pinSvg='<div class="pin-hit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="0 0 16 22" aria-hidden="true"><path fill="#d12203" stroke="#fff" stroke-width="1.25" stroke-linejoin="round" '+pinPath+"/></svg></div>";
+const hollowSvg='<div class="pin-hit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="22" viewBox="0 0 16 22" aria-hidden="true"><path fill="#0b0b0b" fill-opacity=".35" stroke="#d12203" stroke-width="1.6" stroke-linejoin="round" '+pinPath+"/></svg></div>";
+const pinIcon=L.divIcon({className:"pin",html:pinSvg,iconSize:[28,28],iconAnchor:[14,27],popupAnchor:[0,-20]});
+const hollowIcon=L.divIcon({className:"pin",html:hollowSvg,iconSize:[28,28],iconAnchor:[14,27],popupAnchor:[0,-20]});
+const PIPE=new Set(["Lead","Planned","Converting"]);
+const isPipe=s=>PIPE.has(s.status);
 const markers=[];
 STATIONS.forEach(s=>{ if(s.lat==null) return;
-  const m=L.circleMarker([s.lat,s.lng],{radius:7,color:"#fff",weight:2,fillColor:COLORS[s.status],fillOpacity:1});
+  const m=L.marker([s.lat,s.lng],{icon:isPipe(s)?hollowIcon:pinIcon,riseOnHover:true,keyboard:true});
   m.bindPopup(`<b>${esc(s.Name)}</b><br>${esc(s.Address)}<br>Status: ${esc(s.status)}`+[["Operator or owner contact","Operator"],["Date branded","Date branded"],["Date debranded","Date debranded"],["Cost estimate","Cost estimate"]].map(([k,l])=>s[k]?`<br>${l}: ${esc(s[k])}`:"").join(""));
   markers.push({s,m});});
-const usedStatuses=Object.entries(COLORS).filter(([k])=>STATIONS.some(s=>s.status===k));
-if(usedStatuses.length<=1){const bar=$("mapbar"); if(bar) bar.remove();}
-else $("legend").innerHTML=usedStatuses.map(([k,v])=>`<span><span class="dot" style="background:${v}"></span>${k}</span>`).join("");
-const uniq=a=>[...new Set(a)].sort();
-uniq(STATIONS.map(s=>s.State)).forEach(v=>$("fState").insertAdjacentHTML("beforeend",`<option>${esc(v)}</option>`));
-const presentStatuses=uniq(STATIONS.map(s=>s.status));
-if(presentStatuses.length<=1){const el=$("fStatus"); if(el) el.remove();}
-else presentStatuses.forEach(v=>$("fStatus").insertAdjacentHTML("beforeend",`<option>${esc(v)}</option>`));
-let sortK="loc",sortDir=1;
-function visible(s){const q=$("q").value.toLowerCase(),st=$("fState").value,ss=$("fStatus")&&$("fStatus").value;
-  if(st&&s.State!==st)return false; if(ss&&s.status!==ss)return false;
+const bar=$("mapbar"); if(bar) bar.remove();
+$("nCA").textContent=STATIONS.filter(s=>s.status==="Open"&&s.State==="CA").length;
+$("nTX").textContent=STATIONS.filter(s=>s.status==="Open"&&s.State==="TX").length;
+$("nLead").textContent=STATIONS.filter(isPipe).length;
+let filter="all",sortK="loc",sortDir=1;
+function visible(s){const q=$("q").value.toLowerCase();
+  if(filter==="leads"){if(!isPipe(s))return false;}
+  else{if(isPipe(s))return false; if(filter==="CA"&&s.State!=="CA")return false; if(filter==="TX"&&s.State!=="TX")return false;}
   if(q&&!Object.values(s).join(" ").toLowerCase().includes(q))return false; return true;}
-function cmp(a,b){const keys=sortK==="loc"?["State","City","Name"]:[sortK];
+const STATE_NAMES={CA:"California",TX:"Texas"};
+function stateName(s){return STATE_NAMES[s.State]||s.State;}
+function cmp(a,b){const keys=sortK==="loc"?["City","Name"]:[sortK];
   for(const k of keys){const d=String(a[k]??"").localeCompare(String(b[k]??""),undefined,{numeric:true});if(d)return d*sortDir;}return 0;}
-function render(){const rows=STATIONS.filter(visible).sort(cmp);
-  document.querySelector("#tbl tbody").innerHTML=rows.map(s=>`<tr><td>${esc(s.Name)}</td><td>${esc(s.loc)}</td><td>${esc(s.Address)}</td><td><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></td></tr>`).join("");
-  $("list").innerHTML=rows.map(s=>`<li><div class="l-top"><strong>${esc(s.Name)}</strong><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></div><div class="l-addr">${esc(s.Address)}</div><div class="l-loc">${esc(s.loc)}</div></li>`).join("");
+function grouped(rows){
+  const counts={}; rows.forEach(s=>{const k=stateName(s);counts[k]=(counts[k]||0)+1;});
+  const ordered=[...rows].sort((a,b)=>{const d=stateName(a).localeCompare(stateName(b));return d||cmp(a,b);});
+  return {ordered,counts};
+}
+function render(){const {ordered:rows,counts}=grouped(STATIONS.filter(visible));
+  let last="",tbl="",lis="";
+  if(!rows.length&&filter==="leads"){
+    const msg="No leads yet. Add a row with Status Lead in the Sheet.";
+    tbl=`<tr class="empty"><td colspan="4">${msg}</td></tr>`;
+    lis=`<li class="empty">${msg}</li>`;
+  }else rows.forEach(s=>{
+    const k=stateName(s);
+    if(k!==last){tbl+=`<tr class="ghead"><td colspan="4">${esc(k)} · ${counts[k]}</td></tr>`;lis+=`<li class="ghead">${esc(k)} · ${counts[k]}</li>`;last=k;}
+    tbl+=`<tr><td>${esc(s.Name)}</td><td>${esc(s.City)}</td><td>${esc(s.Address)}</td><td><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></td></tr>`;
+    lis+=`<li><div class="l-top"><strong>${esc(s.Name)}</strong><span class="pill" style="--c:${COLORS[s.status]}">${esc(s.status)}</span></div><div class="l-addr">${esc(s.Address)}</div></li>`;
+  });
+  document.querySelector("#tbl tbody").innerHTML=tbl;
+  $("list").innerHTML=lis;
   markers.forEach(({s,m})=>{visible(s)?m.addTo(map):m.remove();});
   document.querySelectorAll("th").forEach(th=>th.className=th.dataset.k===sortK?(sortDir>0?"asc":"desc"):"");
   const nm=STATIONS.filter(s=>s.lat==null&&visible(s)).map(s=>s.Name);$("nomap").textContent=nm.length?`Not on map yet (address being confirmed): ${nm.join(", ")}`:"";}
+function fitVisible(){
+  const pts=markers.filter(({s})=>visible(s)).map(({m})=>m.getLatLng());
+  if(!pts.length)return;
+  const mobile=window.matchMedia("(max-width:600px)").matches;
+  const tight=filter!=="all";
+  map.fitBounds(L.latLngBounds(pts),{paddingTopLeft:mobile?[28,20]:[48,tight?56:80],paddingBottomRight:mobile?[28,20]:[48,48],maxZoom:tight?9:6});
+}
 document.querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortDir=(sortK===k)?-sortDir:1;sortK=k;render();});
-["q","fState","fStatus"].forEach(id=>{const el=$(id); if(el) el.addEventListener("input",render);});
-$("fSort").addEventListener("change",()=>{sortK=$("fSort").value;sortDir=1;render();});
+$("q").addEventListener("input",()=>{render();});
+document.querySelectorAll("#seg button").forEach(btn=>btn.addEventListener("click",()=>{
+  filter=btn.dataset.f;
+  document.querySelectorAll("#seg button").forEach(b=>{b.classList.toggle("on",b===btn);b.setAttribute("aria-selected",b===btn?"true":"false");});
+  render(); fitVisible();
+}));
 render();
-const pts=markers.map(x=>x.m.getLatLng());if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.1));
+map.whenReady(()=>{map.invalidateSize(); fitVisible();});
 </script></body></html>
 """
 
-
 def check_build(stations, html_path, csv_path):
-    """Assert the built page lists every published station and omits Lost rows."""
+    """Assert the built page lists every published station and omits Lost rows and demo data."""
     ids = [s["ID"] for s in stations]
     if not ids:
         sys.exit("Build check failed: no stations")
@@ -213,23 +266,38 @@ def check_build(stations, html_path, csv_path):
         sys.exit("Build check failed: table still has an inner scroll box")
     if 'id="list"' not in text or 'id="tbl"' not in text:
         sys.exit("Build check failed: table or phone list markup missing")
+    if 'id="seg"' not in text or 'data-f="leads"' not in text:
+        sys.exit("Build check failed: All / California / Texas / Leads buttons missing")
+    if "No leads yet. Add a row with Status Lead in the Sheet." not in text:
+        sys.exit("Build check failed: empty Leads message missing")
     if ".hwrap{flex-wrap:wrap" in text or "border-top:1px solid rgba(255,255,255,.25)" in text:
         sys.exit("Build check failed: phone header still stacks the count under the logo")
     if "height:45vh" not in text or "min-height:260px" not in text:
         sys.exit("Build check failed: phone map height is not 45vh / min 260px")
     if "attributionControl:{prefix:false}" not in text and "setPrefix(false)" not in text:
         sys.exit("Build check failed: Leaflet attribution prefix is still enabled")
-    for blob, label in ((text, "index.html"), (csv_text, "stations.csv")):
+    # Ignore the embedded logo data URI when looking for forbidden demo / Lost strings.
+    logo_i, logo_j = text.find("data:image/png;base64,"), text.find('"', text.find("data:image/png;base64,"))
+    text_no_logo = text if logo_i == -1 else text[:logo_i] + text[logo_j:]
+    for blob, label in ((text_no_logo, "index.html"), (csv_text, "stations.csv")):
         lower = blob.lower()
         if "lost" in lower or "us petro" in lower or "showlost" in lower:
             sys.exit(f"Build check failed: Lost or US Petro still in {label}")
         if "leafletjs.com" in lower:
             sys.exit(f"Build check failed: leafletjs.com still in {label}")
+        for banned in ("Example lead", "Example data", "DEMO"):
+            if banned in blob:
+                sys.exit(f"Build check failed: {banned!r} found in {label}")
+    # Notes and fuel volume never leave the Sheet
+    if "Fuel volume" in text or "Fuel volume" in csv_text:
+        sys.exit("Build check failed: fuel volume leaked into public output")
     for s in stations:
         if s["ID"] not in text or s["Name"] not in text:
             sys.exit(f"Build check failed: {s['ID']} {s['Name']!r} missing from index.html")
         if s["ID"] not in csv_text or s["Name"] not in csv_text:
             sys.exit(f"Build check failed: {s['ID']} {s['Name']!r} missing from stations.csv")
+        if s["Status"] == "Open" and s["Name"] not in text:
+            sys.exit(f"Build check failed: Open station {s['Name']!r} missing from index.html")
     open_names = [s["Name"] for s in stations if s["Status"] == "Open"]
     if len(open_names) != open_n:
         sys.exit("Build check failed: Open name list does not match open count")
@@ -260,20 +328,10 @@ def main():
     names = {"CA": "California", "TX": "Texas"}
     by_state = Counter(s["State"] for s in open_rows)
     state_line = " · ".join(f"{by_state[st]} {names.get(st, st)}" for st in sorted(by_state) if by_state[st])
-    by_status = Counter(s["Status"] for s in stations)
-    pending = []
-    for st in ("Converting", "Planned", "Lead"):
-        if by_status.get(st):
-            pending.append(f"{by_status[st]} {st.lower()}")
-    known = {"Open", "", "Converting", "Planned", "Lead"}
-    for st, n in sorted(by_status.items()):
-        if st not in known and n:
-            pending.append(f"{n} {st.lower()}")
+    # Header count is Open only; pipeline counts appear on the Leads button, not in the header.
     stat = f'<div class="stat"><div class="n">{len(open_rows)}</div><div class="lbl">Open stations</div>'
     if state_line:
         stat += f'<div class="sub">{html.escape(state_line)}</div>'
-    if pending:
-        stat += f'<div class="sub">{html.escape(" · ".join(pending))}</div>'
     stat += "</div>"
     out = (TEMPLATE.replace("__DATA__", data).replace("__BUILT__", html.escape(built))
            .replace("__LOGO__", logo).replace("__STAT__", stat))

@@ -16,7 +16,7 @@
 - **Public page:** https://jrhernandezx-cpu.github.io/pemex-stations/ (GitHub Pages, served from the `gh-pages` branch root)
 
 ## Files
-- `build.py` – reads the Sheet data and writes `index.html` (dark Esri map, red drop pins, counts, All / California / Texas / Leads buttons, sortable table) and refreshes `data/stations.csv`. No dependencies beyond Python 3. It asserts the output has no Lost rows, no inner scroll box, no Leaflet prefix, and none of the strings `Example lead`, `Example data`, or `DEMO`.
+- `build.py` – reads the Sheet data and writes `index.html` (all-black page, dark Esri map, red drop pins, counts, All / California / Texas / Leads buttons, sortable table) and refreshes `data/stations.csv`. No dependencies beyond Python 3. It asserts the output has no Lost rows, no inner scroll box, no Leaflet prefix, and none of the strings `Example lead`, `Example data`, or `DEMO`.
 - `assets/pemex-logo.png` – PEMEX lockup from the photo J.R. provided (red eagle-in-drop with white outline, white PEMEX wordmark on black). Tight crop; near-black background remapped to #0b0b0b to sit on the black header. Brand red sampled from the mark is #d12203. `build.py` embeds it in the header on every build and stops if it's missing. Publishing pushes `assets/` too.
 - `data/stations.csv` – the last Sheet snapshot used for the build.
 - `index.html` – the generated page (do not hand-edit; re-run the build).
@@ -45,7 +45,7 @@
    once, after which only `main` needs pushing.
 
 ## Page behaviour
-- Full-width dark Esri canvas map under a black header with J.R.'s PEMEX logo and a thin condensed Open-stations count (Open only; e.g. "26" with "20 California · 6 Texas").
+- Full-width dark Esri canvas map on an all-black page (background #0b0b0b, white text) with J.R.'s PEMEX logo and a thin condensed Open-stations count (Open only; e.g. "26" with "20 California · 6 Texas"). The list, search, buttons and footer use the same black field and white type, with hairline separators and no white cards.
 - Open stations use solid red PEMEX drop pins. Lead, Planned and Converting rows (if any) appear only when the Leads button is selected, as hollow red drop pins, and in the list with a status label.
 - Buttons under the map: All (default, Open stations in both states), California, Texas, Leads. Each state and Leads button shows a quiet count. All / California / Texas never include pipeline rows. With no leads, the list shows: "No leads yet. Add a row with Status Lead in the Sheet." Search is kept. Default sort is state, then city. The list is grouped under "California" and "Texas" headings. On a phone the table becomes a stacked list and the four buttons stay on one row.
 - Table columns: Station, City, Address, Status. Pin popup: name, address, status, plus operator, dates and cost estimate only when filled.
